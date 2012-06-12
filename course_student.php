@@ -25,7 +25,8 @@ function get_body() {
 		}
 	</style>
 	<?php
-	$course = get_record_select('course', 'id = '.$this->course, 'id, shortname, fullname');
+        global $DB;
+	$course = $DB->get_record_select('course', 'id = '.$this->course, array('id', 'shortname', 'fullname'));
 	$possible = $this->get_possible_criteria($this->cfg->prefix, $course->id);
 	$poss_by_level = $this->get_possible_by_level($course->id);
 	$achieved = $this->get_achieved($this->cfg->prefix, $this->user->id, $course->id);
@@ -54,7 +55,7 @@ function get_body() {
 				if ($letter != 'P') $data .= '<td>&nbsp;</td>';
 				if (count($poss_by_level[$letter])) {
 					$l = array_shift($poss_by_level[$letter]);
-					$description = get_field_select('grade_outcomes', 'description', 'shortname="'.$l->shortname.'" AND courseid='.$this->course);
+					$description = $DB->get_field_select('grade_outcomes', 'description', array('shortname="'.$l->shortname.'"','courseid='.$this->course));
 					//echo '<p>'.$description.'</p>';
 					if (isset($achieved[$l->shortname])) { // achieved!
 						$data .= '<td title="'.$description.'" class="achieved"><strong>'.$l->shortname.'</strong></td>';
@@ -99,7 +100,8 @@ function criteria_exist($possible, $letter) {
 }
 
 function get_possible_by_level($course) {
-	$temp = get_records_select('grade_outcomes', 'courseid='.$course, '', 'shortname, description');
+        global $DB;
+	$temp = $DB->get_records_select('grade_outcomes', 'courseid='.$course, array('shortname', 'description'));
 	$possible = array();
 	foreach ($temp as $item) {
 		$firstchar = strtoupper(substr($item->shortname, 0, 1));
@@ -177,12 +179,13 @@ function get_achieved_assignment($prefix, $courseid, $userid) {
 }
 /*  FIXED MJT  */
 function get_achieved_quiz($courseid, $userid) {
+        global $DB;
 	$prefix = $this->cfg->prefix;
 	$criteria = array();
-	$q = get_records_select('quiz', 'course='.$courseid, '', 'id, sumgrades, grade');
+	$q = $DB->get_records_select('quiz', 'course='.$courseid, array('id, sumgrades, grade'));
 	foreach ($q as $quiz) { //loops through all quizzes in course
-		$threshold = get_record_select('quiz_feedback', 'quizid='.$quiz->id.' and feedbacktext="PASS"', 'mingrade');
-		$curr_score = get_record_select('quiz_grades', 'quiz='.$quiz->id.' and userid='.$userid.'', 'grade');
+		$threshold = $DB->get_record_select('quiz_feedback', 'quizid='.$quiz->id,array('feedbacktext="PASS"', 'mingrade'));
+		$curr_score = $DB->get_record_select('quiz_grades', 'quiz='.$quiz->id,array('userid='.$userid.'', 'grade'));
 		if (isset($curr_score->grade) && $curr_score->grade >= $threshold->mingrade && $threshold->mingrade != null) {
 			// User has PASSED this quiz!
 			$sql = 'SELECT b.shortname 

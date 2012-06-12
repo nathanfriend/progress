@@ -2,9 +2,10 @@
 include('functions.php');
 $base_url = str_replace('blocks/progress/summary_course.php', '', $_SERVER['SCRIPT_FILENAME']);
 require_once($base_url.'config.php');
-$course = get_record_select('course', 'id='.$_GET['course']);
-$user = get_record_select('user', 'id='.$_GET['user']);
-if ( isset($_GET['group']) ) $group = get_record_select('groups', 'id='.$_GET['group']);
+global $DB;
+$course = $DB->get_record_select('course', 'id='.$_GET['course']);
+$user = $DB->get_record_select('user', 'id='.$_GET['user']);
+if ( isset($_GET['group']) ) $group = $DB->get_record_select('groups', 'id='.$_GET['group']);
 $now = time();
 ?>
 <?php

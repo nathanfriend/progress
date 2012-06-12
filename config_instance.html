@@ -96,7 +96,8 @@
      </td>
  </tr>
         <?php
-        $groups = get_records_select('groups', 'courseid='.$COURSE->id, 'name', 'id, name');
+        global $DB;
+        $groups = $DB->get_records_select('groups', 'courseid='.$COURSE->id, array('name', 'id', 'name'));
         if ($groups) {
         	?>
         	<tr valign="top">

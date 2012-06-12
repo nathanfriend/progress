@@ -42,12 +42,13 @@ function get_points($idnumber) {
 }
 
 function get_body() {
+        global $DB;
 	$maxlength = 30;
 	$data = '';
 	$letters = array('P', 'M', 'D');
-	$student_role=get_field('role','id','shortname','student');
+        $student_role=$DB->get_field('role', 'id', array('shortname'=>'student'));
 	$content = '';
-	$courses = get_my_courses($this->user->id, 'sortorder');
+	$courses = enrol_get_users_courses($this->user->id, 'sortorder');
 	foreach($courses as $course) {
 		//echo '<h4>'.$course->fullname.'</h4>';
 		$points = $this->get_points($course->idnumber);
@@ -153,15 +154,16 @@ function get_achieved_assignment($courseid, $userid) {
 }
 
 function get_achieved_quiz($courseid, $userid) {
+        global $DB;
 	$criteria = array();
-	$q = get_records_select('quiz', 'course='.$courseid, '', 'id, sumgrades, grade');
+	$q = $DB->get_records_select('quiz', 'course='.$courseid, array('id', 'sumgrades', 'grade'));
 	if ($q != null) {
 		foreach ($q as $quiz) {
-		$threshold = get_record_select('quiz_feedback', 'quizid='.$quiz->id.' and feedbacktext="PASS"', 'mingrade');
-		$curr_score = get_record_select('quiz_grades', 'quiz='.$quiz->id.' and userid='.$userid.'', 'grade');
+		$threshold = $DB->get_record_select('quiz_feedback', 'quizid='.$quiz->id, array('feedbacktext="PASS"', 'mingrade'));
+		$curr_score = $DB->get_record_select('quiz_grades', 'quiz='.$quiz->id, array('userid='.$userid.'', 'grade'));
 		if ($curr_score->grade >= $threshold->mingrade && $threshold->mingrade != null) {
 			// User has PASSED this quiz!
-			$crit = get_records_select('grade_items', 'courseid='.$courseid.' and itemmodule="quiz" and iteminstance='.$quiz->id, '', 'itemname');
+			$crit = $DV->get_records_select('grade_items', 'courseid='.$courseidm, array('itemmodule="quiz"','iteminstance='.$quiz->id, '', 'itemname'));
 			foreach ($crit as $c=>$d) if (substr($c, 0, 1) == 'P' || substr($c, 0, 1) == 'M' || substr($c, 0, 1) == 'D') {
 				$criteria[$c] = true;
 			}

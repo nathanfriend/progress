@@ -1,11 +1,12 @@
 <?php
+global $DB;
 $base_url = str_replace('blocks/progress/summary_student_course.php', '', $_SERVER['SCRIPT_FILENAME']);
 require_once($base_url.'config.php');
-$course = get_record_select('course', 'id='.$_GET['course']);
+$course = $DB->get_record_select('course', 'id='.$_GET['course']);
 //print_r($course);
-$user = get_record_select('user', 'id='.$_GET['user']);
-$student = get_record_select('user', 'id='.$_GET['student']);
-if ( array_key_exists('group', $_GET) ) $group = get_record_select('groups', 'id='.$_GET['group']);
+$user = $DB->get_record_select('user', 'id='.$_GET['user']);
+$student = $DB->get_record_select('user', 'id='.$_GET['student']);
+if ( array_key_exists('group', $_GET) ) $group = $DB->get_record_select('groups', 'id='.$_GET['group']);
 $now = time();
 ?>
 <?php
@@ -63,7 +64,7 @@ function has_outcomes($prefix, $course, $assignment) {
 ?>
 <?php
 function get_possible($prefix, $course, $student) {
-	$temp = get_records_select('grade_items', 'courseid='.$course, '', 'id, courseid, itemname, iteminstance');
+	$temp = $DB->get_records_select('grade_items', 'courseid='.$course, '', array('id', 'courseid', 'itemname', 'iteminstance'));
 	//echo '<pre>';
 	//print_r($temp);
 	//echo '</pre>';
@@ -102,7 +103,7 @@ function get_description($prefix, $course, $outcome) {
 <body>
 <?php
 $criteria = get_possible_criteria($CFG->prefix, $_GET['course']);
-$assignments = get_records_select('assignment', 'course='.$_GET['course']);
+$assignments = $DB->get_records_select('assignment', 'course='.$_GET['course']);
 $possible = get_possible($CFG->prefix, $_GET['course'], $_GET['student']);
 $achieved = get_achieved($CFG->prefix, $_GET['course'], $_GET['student']);
 $count = 0;

@@ -42,6 +42,7 @@ function get_title() {
 
 # --------------------- RETRIEVES THE CONTENT OF THE BLOCK ---------------------
 function get_body() {
+        global $DB;
 	global $COURSE;
 	$data = '';
 	$g = false;
@@ -51,7 +52,7 @@ function get_body() {
 	$data = '';
 	$error_message = '';
 	$letters = array('P', 'M', 'D');
-	$course = get_record_select('course', 'id = '.$courseid);
+	$course = $DB->get_record_select('course', 'id = '.$courseid);
 	$grades = $this->get_grades($courseid);
 	//print_r($grades);
 	if (isset($this->conf->mode) && $this->conf->mode == 'tutor') {
@@ -60,7 +61,7 @@ function get_body() {
 	} else if (!$grades) {
 		$error_message .= '<p>'.get_string('outcomesmissing', 'block_progress').'</p>';
 	}
-	$student_role=get_field('role','id','shortname','student');
+        $student_role=$DB->get_field('role','id',array('shortname'=>'student'));
 	$content = '';
 
 		$context = get_context_instance(CONTEXT_COURSE,$COURSE->id);
@@ -72,7 +73,7 @@ function get_body() {
 		if (isset($_GET['group'])) $g = $_GET['group'];
 		if ($students) {
 			if (isset($g) && $g != null && $g != 'all') {
-				$members = get_records_select('groups_members', 'groupid='.$g);
+				$members = $DB->get_records_select('groups_members', 'groupid='.$g);
 				//print_r($members);
 				if ( $members != null ) {
 					foreach($members as $m) {
@@ -164,7 +165,8 @@ function get_footer() {
 }
 
 function generate_group_links($courseid, $g) {
-	$groups = get_records_select('groups', 'courseid='.$courseid, 'name', 'id, name');
+        global $DB;
+	$groups = $DB->get_records_select('groups', 'courseid='.$courseid, array('name', 'id', 'name'));
 	if ( $groups != null ) {
 		$data = '';
 		$url = $this->cfg->wwwroot.'/course/view.php?id='.$courseid;
@@ -266,13 +268,14 @@ function get_achieved_assignment($courseid, $userid) {
 }
 
 function get_achieved_quiz($courseid, $userid) {
+        global $DB;
 	$criteria = array();
-	$q = get_records_select('quiz', 'course='.$courseid, '', 'id, sumgrades, grade');
+	$q = $DB->get_records_select('quiz', 'course='.$courseid, '', array('id', 'sumgrades', 'grade'));
 	//print_r($q);
 	if ($q) {
 		foreach ($q as $quiz) {
-		$threshold = get_record_select('quiz_feedback', 'quizid='.$quiz->id.' and feedbacktext="PASS"', 'mingrade');
-		$curr_score = get_record_select('quiz_grades', 'quiz='.$quiz->id.' and userid='.$userid.'', 'grade');
+		$threshold = $DB->get_record_select('quiz_feedback', 'quizid='.$quiz->id, array('feedbacktext="PASS"', 'mingrade'));
+		$curr_score = $DB->get_record_select('quiz_grades', 'quiz='.$quiz->id, array('userid='.$userid.'', 'grade'));
 		//echo '<p>curr_score-&gt;grade '.$curr_score->grade.'</p>';
 		//echo '<p>threshold-&gt;mingrade '.$threshold->mingrade.'</p>';
 		if ( isset($curr_score->grade) ) {
@@ -280,7 +283,7 @@ function get_achieved_quiz($courseid, $userid) {
 			if ($curr_score->grade >= $threshold->mingrade && $threshold->mingrade != null) {
 			// User has PASSED this quiz!
 			//echo '<p>PASSED!</p>';
-			$crit = get_records_select('grade_items', 'courseid='.$courseid.' and itemmodule="quiz" and iteminstance='.$quiz->id, '', 'itemname');
+			$crit = $DB->get_records_select('grade_items', 'courseid='.$courseid, array('itemmodule="quiz"','iteminstance='.$quiz->id, '', 'itemname'));
 			//print_r($crit);
 			foreach ($crit as $c=>$d) if (substr($c, 0, 1) == 'P' || substr($c, 0, 1) == 'M' || substr($c, 0, 1) == 'D') {
 				$criteria[$c] = true;

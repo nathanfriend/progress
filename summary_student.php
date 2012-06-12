@@ -1,9 +1,10 @@
 <?php
+global $DB;
 $base_url = str_replace('blocks/progress/summary_student.php', '', $_SERVER['SCRIPT_FILENAME']);
 require_once($base_url.'config.php');
-$student = get_record_select('user', 'id='.$_GET['student']);
-$courses = get_my_courses($student->id, 'sortorder');
-$user = get_record_select('user', 'id='.$_GET['user']);
+$student = $DB->get_record_select('user', 'id='.$_GET['student']);
+$courses = $DB->get_my_courses($student->id, 'sortorder');
+$user = $DB->get_record_select('user', 'id='.$_GET['user']);
 $now = time();
 
 // require valid moodle login.  Will redirect to login page if not logged in.
@@ -30,7 +31,7 @@ if ($role->roleid==5) {
                       CheckRole();
                       } 
 
-$r = get_record('role_assignments', 'userid', $USER->id);
+$r = $DB->get_record('role_assignments', 'userid', $USER->id);
 //echo 'role 2:' . $r->roleid;
 //if ($r->roleid==5) { CheckRole(); }
 if ($role->roleid==5) {CheckRole(); }
@@ -107,10 +108,11 @@ function outcome_achieved($prefix, $course, $student, $outcome) {
 <?php
 // returns true if the user has achieved a specific outcome through a quiz //
 function quiz_outcome_achieved($prefix, $course, $student, $outcome) {
-	$quizzes = get_records_select('quiz', 'course='.$course, 'id');
+        global $DB;
+	$quizzes = $DB->get_records_select('quiz', 'course='.$course, 'id');
 	foreach($quizzes as $q) {
-		$threshold = get_field_select('quiz_feedback', 'mingrade', 'feedbacktext="PASS"');
-		$grade = get_field_select('quiz_grades', 'grade', 'quiz='.$q->id.' and userid='.$student);
+		$threshold = $DB->get_field_select('quiz_feedback', 'mingrade', 'feedbacktext="PASS"');
+		$grade = $DB->get_field_select('quiz_grades', 'grade', 'quiz='.$q->id.' and userid='.$student);
 		if ($grade >= $threshold) { // they have passed the quiz!
 			// which criteria have they passed?
 			$sql = 'select count(b.id) as id from mdl_grade_items a, mdl_grade_outcomes b 
@@ -158,7 +160,8 @@ function get_description($prefix, $course, $outcome) {
 ?>
 <?php
 function get_points($course) {
-	$idnumber = get_field_select('course', 'idnumber', 'id='.$course['course']->id);
+        global $DB;
+	$idnumber = $DB->get_field_select('course', 'idnumber', 'id='.$course['course']->id);
 	$values = explode('/', $idnumber);
 	if (count($values) == 3 && is_numeric($values[0]) && is_numeric($values[1]) && is_numeric($values[2])) {
 		$points = 0;

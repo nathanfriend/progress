@@ -1,6 +1,7 @@
 <?php
 function generate_group_links($courseid, $page) {
-	$groups = get_records_select('groups', 'courseid='.$courseid, 'name', 'id, name');
+        global $DB;
+	$groups = $DB->get_records_select('groups', 'courseid='.$courseid, array('name', 'id, name'));
 	if (count($groups)) {
 		$data = '';
 		$url = $page.'?course='.$courseid.'&prefix='.$_GET['prefix'].'&user='.$_GET['user'];
@@ -62,10 +63,11 @@ function outcome_achieved($prefix, $course, $student, $outcome) {
 <?php
 // returns true if the user has achieved a specific outcome through a quiz //
 function quiz_outcome_achieved($prefix, $course, $student, $outcome) {
-	$quizzes = get_records_select('quiz', 'course='.$course, 'id');
+        global $DB;
+	$quizzes = $DB->get_records_select('quiz', 'course='.$course, array('id'));
 	foreach($quizzes as $q) {
-		$threshold = get_field_select('quiz_feedback', 'mingrade', 'feedbacktext="PASS"');
-		$grade = get_field_select('quiz_grades', 'grade', 'quiz='.$q->id.' and userid='.$student);
+		$threshold = $DB->get_field_select('quiz_feedback', 'mingrade', array('feedbacktext="PASS"'));
+		$grade = $DB->get_field_select('quiz_grades', 'grade', array('quiz='.$q->id.' userid='.$student));
 		if ($grade >= $threshold) { // they have passed the quiz!
 			// which criteria have they passed?
 			$sql = 'select count(b.id) as id from mdl_grade_items a, mdl_grade_outcomes b 
@@ -90,14 +92,15 @@ function uses_outcomes($prefix, $courseid) {
 ?>
 <?php
 function get_students($courseid, $prefix, $group=null) {
+        global $DB;
 	if ($group != null) {
-		$members = get_records_select('groups_members', 'groupid='.$group);
+		$members = $DB->get_records_select('groups_members', 'groupid='.$group);
 		foreach($members as $m) {
 			$i = $m->userid;
 			$member[$i] = true;
 		}
 	}
-	$student_role=get_field('role','id','shortname','student');
+        $student_role=$DB->get_field('role','id',array('shortname'=>'student'));
 	$context = get_context_instance(CONTEXT_COURSE,$courseid);
 	$students = get_role_users($student_role, $context, true);
 	if ($group != null) {

@@ -5,7 +5,8 @@ require_once($base_url.'config.php');
 ?>
 <?php
 function generate_group_links($courseid) {
-	$groups = get_records_select('groups', 'courseid='.$courseid, 'name', 'id, name');
+        global $DB;
+	$groups = $DB->get_records_select('groups', 'courseid='.$courseid, array('name', 'id, name'));
 	if (count($groups)) {
 		$data = '';
 		$url = 'summary.php?course='.$courseid.'&prefix='.$_GET['prefix'].'&user='.$_GET['user'];
@@ -84,11 +85,11 @@ function get_achieved($p, $s, $c) {
 		$outcome[$crit] = 1;
 	}
 	// check quizzes...
-	$q = get_records_select('quiz', 'course='.$c, '', 'id, sumgrades, grade');
+	$q = $DB->get_records_select('quiz', 'course='.$c, '',array('id, sumgrades, grade'));
 	if ( count($q) ) {
 	foreach ($q as $quiz) { //loops through all quizzes in course
-		$threshold = get_record_select('quiz_feedback', 'quizid='.$quiz->id.' and feedbacktext="PASS"', 'mingrade');
-		$curr_score = get_record_select('quiz_grades', 'quiz='.$quiz->id.' and userid='.$s.'', 'grade');
+		$threshold = $DB->get_record_select('quiz_feedback', 'quizid='.$quiz->id, array('feedbacktext="PASS"', 'mingrade'));
+		$curr_score = $DB->get_record_select('quiz_grades', 'quiz='.$quiz->id, array('userid='.$s.'', 'grade'));
 		if ( $curr_score != null ) {
 			if ($curr_score->grade >= $threshold->mingrade && $threshold->mingrade != null) {
 			// User has PASSED this quiz!
@@ -173,12 +174,12 @@ $userid = $_GET['user'];
 $prefix = $_GET['prefix'];
 if (isset($_GET['group'])) $group = $_GET['group'];
 $now = time();
-$user = get_record_select('user', 'id='.$userid);
-$category_id = get_field_select('course', 'category', 'id='.$courseid);
-$category_name = get_field_select('course_categories', 'name', 'id='.$category_id);
+$user = $DB->get_record_select('user', 'id='.$userid);
+$category_id = $DB->get_field_select('course', 'category', array('id='.$courseid));
+$category_name = $DB->get_field_select('course_categories', 'name', array('id='.$category_id));
 echo '<h1>'.$category_name.'</h1>';
 if ( isset($group) ) {
-	$g = get_field('groups', 'name', 'id', $group);
+	$g = $DB0>get_field('groups', 'name', array('id', $group));
 	echo '<h2>'.get_string('summaryfor', 'block_progress').' '.$g.'</h2>';
 } else {
 	echo '<h2>'.get_string('summary', 'block_progress').'</h2>';
@@ -188,7 +189,7 @@ if ( isset($group) ) {
 <p class="printonly"><?php echo $user->firstname.' '.$user->lastname ?></p>
 <p class="printonly"><?php echo date('jS F Y', $now) ?></p>
 <?php
-$student_role=get_field('role','id','shortname','student');
+$student_role=$DB->get_field('role','id',array('shortname'=>'student'));
 $context = get_context_instance(CONTEXT_COURSE,$courseid);
 if (has_capability('mod/assignment:grade', $context)) {
 	$all_courses = array();
@@ -196,7 +197,7 @@ if (has_capability('mod/assignment:grade', $context)) {
 	$students = get_role_users($student_role, $context, true);
 	if ($students) {
 		if (isset($group)) {
-			$members = get_records_select('groups_members', 'groupid='.$group);
+			$members = $DB->get_records_select('groups_members', 'groupid='.$group);
 			foreach($members as $m) {
 				$i = $m->userid;
 				$member[$i] = true;
@@ -299,7 +300,7 @@ if (has_capability('mod/assignment:grade', $context)) {
 		echo '</table></div></div>';
 
 		# DISPLAY KEY
-		$teacher_role=get_field('role','id','shortname','editingteacher');
+		$teacher_role=$DB->get_field('role','id',array('shortname'=>'editingteacher'));
 		echo '<div class="page">';
 		echo "\n".'<div id="key"><h2 class="newpage">'.get_string('key', 'block_progress').'</h2>';
 		echo '<table><tr><td colspan="2"><h3>'.get_string('courses', 'block_progress').'</h3></td></tr>';
