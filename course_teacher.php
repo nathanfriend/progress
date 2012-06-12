@@ -277,8 +277,8 @@ function get_achieved_quiz($courseid, $userid) {
 	//print_r($q);
 	if ($q) {
 		foreach ($q as $quiz) {
-		$threshold = $DB->get_records_select('quiz_feedback', 'quizid='.$quiz->id, array('feedbacktext="PASS"', 'mingrade'));
-		$curr_score = $DB->get_records_select('quiz_grades', 'quiz='.$quiz->id, array('userid='.$userid, 'grade'));
+		$threshold = $DB->get_record_select('quiz_feedback', 'quizid='.$quiz->id, array('feedbacktext="PASS"', 'mingrade'));
+		$curr_score = $DB->get_record_select('quiz_grades', 'quiz='.$quiz->id, array('userid='.$userid, 'grade'));
 		//echo '<p>curr_score-&gt;grade '.$curr_score->grade.'</p>';
 		//echo '<p>threshold-&gt;mingrade '.$threshold->mingrade.'</p>';
 		if ( isset($curr_score->grade) ) {
