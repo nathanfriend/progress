@@ -61,6 +61,9 @@ function get_grades($p, $c) {
 				where a.id = b.outcomeid
 				and b.courseid='.$c.
 				' and a.shortname like "'.$letter.'%";';
+        include '/protected/dbcred.php'; 
+        mysql_connect($host, $user, $pass);
+        mysql_select_db($db);
 		$result = mysql_query($sql);
 		$count = mysql_num_rows($result);
 		$grade[$letter] = $count;
@@ -70,6 +73,7 @@ function get_grades($p, $c) {
 ?>
 <?php
 function get_achieved($p, $s, $c) {
+        global $DB;
 	$sql = 'SELECT c. shortname, b.itemname
 			FROM '.$p.'grade_grades a, '.$p.'grade_items b, '.$p.'grade_outcomes c
 			WHERE a.itemid = b.id
@@ -85,7 +89,7 @@ function get_achieved($p, $s, $c) {
 		$outcome[$crit] = 1;
 	}
 	// check quizzes...
-	$q = $DB->get_records_select('quiz', 'course='.$c, '',array('id, sumgrades, grade'));
+	$q = $DB->get_records_select('quiz', 'course='.$c, array('id, sumgrades, grade'));
 	if ( count($q) ) {
 	foreach ($q as $quiz) { //loops through all quizzes in course
 		$threshold = $DB->get_record_select('quiz_feedback', 'quizid='.$quiz->id, array('feedbacktext="PASS"', 'mingrade'));
@@ -179,7 +183,7 @@ $category_id = $DB->get_field_select('course', 'category', 'id='.$courseid);
 $category_name = $DB->get_field_select('course_categories', 'name', 'id='.$category_id);
 echo '<h1>'.$category_name.'</h1>';
 if ( isset($group) ) {
-	$g = $DB0>get_field('groups', 'name', array('id', $group));
+        $g = $DB->get_field('groups', 'name', array('id'=>$group));
 	echo '<h2>'.get_string('summaryfor', 'block_progress').' '.$g.'</h2>';
 } else {
 	echo '<h2>'.get_string('summary', 'block_progress').'</h2>';
@@ -307,7 +311,7 @@ if (has_capability('mod/assignment:grade', $context)) {
 		foreach ($all_courses as $key=>$val) {
 			$courseid = $val['course']->id;
 			$context = $val['course']->context;
-			$teachers = get_role_users($teacher_role, $context, true);
+			//$teachers = get_role_users($teacher_role, $context, true);
 			$teach = array();
 			foreach ($teachers as $t) {
 				$name = strtoupper($t->lastname).' '.ucfirst(strtolower($t->firstname));

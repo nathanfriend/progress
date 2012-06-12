@@ -3,7 +3,7 @@ global $DB;
 $base_url = str_replace('blocks/progress/summary_student.php', '', $_SERVER['SCRIPT_FILENAME']);
 require_once($base_url.'config.php');
 $student = $DB->get_record_select('user', 'id='.$_GET['student']);
-$courses = $DB->get_my_courses($student->id, 'sortorder');
+$courses = enrol_get_users_courses($student->id, 'sortorder');
 $user = $DB->get_record_select('user', 'id='.$_GET['user']);
 $now = time();
 
@@ -11,13 +11,13 @@ $now = time();
 require_login();
 
 //Gets role id in course context.
-$context = get_context_instance(CONTEXT_COURSE,$SESSION->cal_course_referer);
-if ($roles = get_user_roles($context, $USER->id)) {
-foreach ($roles as $role) {
+//$context = get_context_instance(CONTEXT_COURSE,$SESSION->cal_course_referer);
+//if ($roles = get_user_roles($context, $USER->id)) {
+//foreach ($roles as $role) {
 //echo 'ID: '.$role->roleid.'<br />';
 //echo 'Name'.$role->name.'<br />';
-}
-}
+//}
+//}
 
 //Checks session userid matches url id.
 function CheckRole() {
@@ -31,7 +31,7 @@ if ($role->roleid==5) {
                       CheckRole();
                       } 
 
-$r = $DB->get_record('role_assignments', 'userid', $USER->id);
+$r = $DB->get_record('role_assignments', array('userid'=>$USER->id));
 //echo 'role 2:' . $r->roleid;
 //if ($r->roleid==5) { CheckRole(); }
 if ($role->roleid==5) {CheckRole(); }
@@ -54,6 +54,9 @@ function get_possible($prefix, $course) {
 				where a.id = b.outcomeid
 				and b.courseid='.$course.
 				' and a.shortname like "'.$letter.'%";';
+        include '/protected/dbcred.php'; 
+        mysql_connect($host, $user, $pass);
+        mysql_select_db($db);
 		$result = mysql_query($sql);
 		$count = mysql_num_rows($result);
 		$possible[$letter] = $count;
@@ -109,7 +112,7 @@ function outcome_achieved($prefix, $course, $student, $outcome) {
 // returns true if the user has achieved a specific outcome through a quiz //
 function quiz_outcome_achieved($prefix, $course, $student, $outcome) {
         global $DB;
-	$quizzes = $DB->get_records_select('quiz', 'course='.$course, 'id');
+	$quizzes = $DB->get_records_select('quiz', 'course='.$course, array('id'));
 	foreach($quizzes as $q) {
 		$threshold = $DB->get_field_select('quiz_feedback', 'mingrade', 'feedbacktext="PASS"');
 		$grade = $DB->get_field_select('quiz_grades', 'grade', 'quiz='.$q->id.' and userid='.$student);

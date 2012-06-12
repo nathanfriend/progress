@@ -33,6 +33,9 @@ function get_possible_criteria($prefix, $course) {
 				where a.id = b.outcomeid
 				and b.courseid='.$course.
 				' and a.shortname like "'.$letter.'%";';
+        include '/protected/dbcred.php'; 
+        mysql_connect($host, $user, $pass);
+        mysql_select_db($db);
 		$result = mysql_query($sql);
 		$temp = array();
 		while ($row = mysql_fetch_assoc($result)) {

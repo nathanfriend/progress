@@ -1,4 +1,5 @@
 <?php
+$string['pluginname']   = 'Student Progress 2';
 $string['progress'] = 'Student Progress';
 $string['blocktitletext'] = 'Block title';
 $string['leaveblanktodefault'] = 'leaving blank defaults to <em>Student Progress</em>';

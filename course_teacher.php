@@ -219,6 +219,9 @@ function get_grades($id) { # retrieves the available p, m and d outcomes
 				and b.courseid='.$id.
 				' and a.shortname like "'.$letter.'%";';
 				//echo '<p>'.$sql.'</p>';
+        include '/protected/dbcred.php'; 
+        mysql_connect($host, $user, $pass);
+        mysql_select_db($db);
 			$result = mysql_query($sql);
 			$count = mysql_num_rows($result);
 			//echo '<p>count: '.$count.'</p>';
@@ -270,12 +273,12 @@ function get_achieved_assignment($courseid, $userid) {
 function get_achieved_quiz($courseid, $userid) {
         global $DB;
 	$criteria = array();
-	$q = $DB->get_records_select('quiz', 'course='.$courseid, '', array('id', 'sumgrades', 'grade'));
+	$q = $DB->get_records_select('quiz', 'course='.$courseid, array('id', 'sumgrades', 'grade'));
 	//print_r($q);
 	if ($q) {
 		foreach ($q as $quiz) {
-		$threshold = $DB->get_record_select('quiz_feedback', 'quizid='.$quiz->id, array('feedbacktext="PASS"', 'mingrade'));
-		$curr_score = $DB->get_record_select('quiz_grades', 'quiz='.$quiz->id, array('userid='.$userid.'', 'grade'));
+		$threshold = $DB->get_records_select('quiz_feedback', 'quizid='.$quiz->id, array('feedbacktext="PASS"', 'mingrade'));
+		$curr_score = $DB->get_records_select('quiz_grades', 'quiz='.$quiz->id, array('userid='.$userid, 'grade'));
 		//echo '<p>curr_score-&gt;grade '.$curr_score->grade.'</p>';
 		//echo '<p>threshold-&gt;mingrade '.$threshold->mingrade.'</p>';
 		if ( isset($curr_score->grade) ) {

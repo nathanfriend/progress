@@ -111,6 +111,9 @@ function get_grades($id) {
 				where a.id = b.outcomeid
 				and b.courseid='.$id.
 				' and a.shortname like "'.$letter.'%";';
+        include '/protected/dbcred.php'; 
+        mysql_connect($host, $user, $pass);
+        mysql_select_db($db);                
 			$result = mysql_query($sql);
 			$count = mysql_num_rows($result);
 			$grade[$letter] = $count;
@@ -163,7 +166,7 @@ function get_achieved_quiz($courseid, $userid) {
 		$curr_score = $DB->get_record_select('quiz_grades', 'quiz='.$quiz->id, array('userid='.$userid.'', 'grade'));
 		if ($curr_score->grade >= $threshold->mingrade && $threshold->mingrade != null) {
 			// User has PASSED this quiz!
-			$crit = $DV->get_records_select('grade_items', 'courseid='.$courseidm, array('itemmodule="quiz"','iteminstance='.$quiz->id, '', 'itemname'));
+			$crit = $DB->get_records_select('grade_items', 'courseid='.$courseidm, array('itemmodule="quiz"','iteminstance='.$quiz->id, '', 'itemname'));
 			foreach ($crit as $c=>$d) if (substr($c, 0, 1) == 'P' || substr($c, 0, 1) == 'M' || substr($c, 0, 1) == 'D') {
 				$criteria[$c] = true;
 			}
