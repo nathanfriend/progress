@@ -175,8 +175,8 @@ $prefix = $_GET['prefix'];
 if (isset($_GET['group'])) $group = $_GET['group'];
 $now = time();
 $user = $DB->get_record_select('user', 'id='.$userid);
-$category_id = $DB->get_field_select('course', 'category', array('id='.$courseid));
-$category_name = $DB->get_field_select('course_categories', 'name', array('id='.$category_id));
+$category_id = $DB->get_field_select('course', 'category', 'id='.$courseid);
+$category_name = $DB->get_field_select('course_categories', 'name', 'id='.$category_id);
 echo '<h1>'.$category_name.'</h1>';
 if ( isset($group) ) {
 	$g = $DB0>get_field('groups', 'name', array('id', $group));
@@ -205,7 +205,7 @@ if (has_capability('mod/assignment:grade', $context)) {
 		}
 		foreach($students as $student) {
 			if ( isset($member[$student->id]) && $member[$student->id] != null && $member[$student->id] || !isset($group)) {
-				$courses = get_my_courses($student->id, 'sortorder');
+				$courses = enrol_get_users_courses($student->id, 'sortorder');
 				foreach ($courses as $course) {
 					if (uses_outcomes($CFG->prefix, $course->id)) { // only a valid course if uses PMD outcomes
 						$all_courses[$course->sortorder]['course'] = $course;
