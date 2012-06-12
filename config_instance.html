@@ -1,0 +1,126 @@
+<?php global $COURSE ?>
+<table cellpadding="9" cellspacing="0">
+ <tr valign="top">
+     <td align="right">
+         <?php print_string('blocktitletext', 'block_progress'); ?>:
+     </td>
+     <td>
+         <input type="text" name="title" size="20" value="<?php echo isset($this->config->title)?p($this->config->title):''; ?>" /> (<?php print_string('leaveblanktodefault', 'block_progress'); ?>)
+     </td>
+ </tr>
+  <tr valign="top">
+     <td align="right">
+         <?php print_string('titleformat', 'block_progress'); ?>:
+     </td>
+     <td>
+        <?php
+        $options = array('shortname'=>'shortname', 'fullname'=>'fullname');
+        choose_from_menu($options, "format", $this->config->format, '');
+        ?>
+     </td>
+ </tr>
+   <tr valign="top">
+     <td align="right">
+         <?php print_string('showpoints', 'block_progress'); ?>:
+     </td>
+     <td>
+        <?php
+        $options = array('yes'=>'Yes', 'no'=>'No',);
+        choose_from_menu($options, "footer", $this->config->footer, '');
+        ?>
+        <?php print_string('showpointsdescription', 'block_progress'); ?>
+     </td>
+ </tr>
+ <tr valign="top">
+     <td align="right">
+         <?php print_string('nocriteriatext', 'block_progress'); ?>:
+     </td>
+     <td>
+         <input type="text" name="none" size="20" value="<?php echo isset($this->config->none)?p($this->config->none):''; ?>" /> <?php print_string('nocriteriadescription', 'block_progress'); ?>
+     </td>
+ </tr>
+ <tr valign="top">
+     <td align="right">
+         <?php print_string('somecriteriatext', 'block_progress'); ?>:
+     </td>
+     <td>
+         <input type="text" name="some" size="20" value="<?php echo isset($this->config->some)?p($this->config->some):''; ?>" /> <?php print_string('somecriteriadescription', 'block_progress'); ?>
+     </td>
+ </tr>
+ <tr valign="top">
+     <td align="right">
+         <?php print_string('allcriteriatext', 'block_progress'); ?>:
+     </td>
+     <td>
+         <input type="text" name="all" size="20" value="<?php echo isset($this->config->all)?p($this->config->all):''; ?>" /> <?php print_string('allcriteriadescription', 'block_progress'); ?>
+     </td>
+ </tr>
+  <tr valign="top">
+     <td align="right">
+         <?php print_string('fadedtext', 'block_progress'); ?>:
+     </td>
+     <td>
+         <input type="text" name="fade" size="20" value="<?php echo isset($this->config->fade)?p($this->config->fade):''; ?>" /> <?php print_string('fadeddescription', 'block_progress'); ?>
+     </td>
+ </tr>
+  <tr valign="top">
+     <td align="right">
+         <?php print_string('prefix', 'block_progress'); ?>:
+     </td>
+     <td>
+         <input type="text" name="prefix" size="20" value="<?php echo isset($this->config->prefix)?p($this->config->prefix):''; ?>" /> <?php print_string('prefixdescription', 'block_progress'); ?>
+     </td>
+ </tr>
+  <tr valign="top">
+     <td align="right">
+         <?php print_string('summarymode', 'block_progress'); ?>:
+     </td>
+     <td>
+        <?php
+        $options = array('teacher'=>get_string('teacher', 'block_progress'), 'tutor'=>get_string('tutor', 'block_progress'),);
+        choose_from_menu($options, "mode", $this->config->mode, '');
+        ?>
+        <?php print_string('summarymodedescription', 'block_progress'); ?>
+     </td>
+ </tr>
+ <tr valign="top">
+     <td align="right">
+         <?php print_string('debug', 'block_progress'); ?>:
+     </td>
+     <td>
+        <?php
+        $options = array('no'=>'No', 'yes'=>'Yes',);
+        choose_from_menu($options, "debug", $this->config->debug, '');
+        ?>
+        <?php print_string('debugdescription', 'block_progress'); ?>
+     </td>
+ </tr>
+        <?php
+        $groups = get_records_select('groups', 'courseid='.$COURSE->id, 'name', 'id, name');
+        if ($groups) {
+        	?>
+        	<tr valign="top">
+     			<td align="right">
+         			<?php print_string('defaultgroup', 'block_progress'); ?>:
+     			</td>
+     		<td>
+        	<?php
+        	unset($options);
+ 			$options = array();
+ 				$options[0] = '-';
+        	foreach ($groups as $group) {
+        		$options[$group->id] = $group->name;
+        	}
+        	choose_from_menu($options, "group", $this->config->group, '');
+			print_string('defaultgroupdescription', 'block_progress');
+        }
+		?>
+     </td>
+ </tr>
+ <tr>
+     <td colspan="2" align="center">
+         <input type="submit" value="<?php print_string('savechanges') ?>" />
+     </td>
+ </tr>
+ </table>
+ <?php use_html_editor(); ?>

@@ -1,0 +1,138 @@
+@font-face {
+	font-family: 'Dax';
+	src: url('dax.ttf');
+}
+
+@page {
+	size: A4 landscape;
+}
+
+body {
+	font-family: Verdana;
+}
+
+.page {
+	margin-left: 30px;
+	margin-top: 30px;
+}
+
+h1, h2, h3 {
+	font-family: Dax, Verdana;
+	color: black;
+	margin: 0;
+	margin-top: 0.5em;
+	margin-bottom: 0.2em;
+}
+
+
+table {
+	font-size: 0.85em;
+}
+
+.course {
+	width: 25px;
+}
+
+table, tr, td, th {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.left, .right, .centre {
+	font-size: 90%;
+}
+
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+	padding-right: 0.3em;
+}
+
+.total {
+	border-top: 1px solid #000000;
+}
+
+.notenrolled, .nograde, .pass, .partial, .summary {
+	text-align: center;
+	vertical-align: middle;
+}
+
+.notenrolled {
+	background-color: white;
+}
+
+.pass, .partial, .nograde {
+	font-size: 0.5em;
+}
+.nograde {
+	background-color: #ffc7ce;
+	border: 1px solid #000000;
+}
+
+.achieved {
+	width: 20px;
+	border: 1px solid #000000;
+	font-size: 0.5em;
+	text-align: center;
+}
+
+.pass {
+	color: black;
+	background-color: #c6efce;
+	border: 1px solid black;
+}
+
+.partial {
+	background-color: #ffeb9c;
+	border: 0px;
+	width: 20px;
+	border: 1px solid black;
+}
+
+.nobox {
+	border: none;
+}
+
+.divider {
+	width: 5px;
+	border-right: 3px solid #000000;
+}
+
+.label {
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.hide {
+	visibility: hidden;
+}
+
+.noprint {
+	display: none;
+}
+
+.summary {
+	font-size: 0.5em;
+}
+
+a.print {
+	color: black;
+	text-decoration: none;
+	font-size: 90%;
+}
+
+H2.newpage {
+	page-break-before: always;
+	margin-top: 30px;
+	padding-top: 30px;
+}
+
+.small {
+	font-size: 70%;
+	font-weight: normal;
+	text-align: left;
+}

@@ -1,0 +1,152 @@
+@font-face {
+	font-family: 'Dax';
+	src: url('dax.ttf');
+}
+
+body {
+	font-family: Verdana;
+}
+
+/*img {
+	border: none;	
+}*/
+
+.footer {
+	clear: both;
+	width: 100%;
+	margin-top: 3em;
+}
+
+h1, h2, h3, dt {
+	font-family: Dax, Verdana;
+	color: #E87511;
+	margin: 0;
+	margin-top: 0.5em;
+	margin-bottom: 0.2em;
+}
+
+#grades {
+	float: left;
+	margin-right: 20px;
+}
+
+#key {
+	float: right;
+	width: 300px;
+}
+
+dt {
+	margin-bottom: 0;
+}
+
+dd {
+	font-size: 80%;
+	margin-left: 0;
+	margin-top: 0;
+}
+
+table {
+	font-size: 0.85em;
+}
+
+.course {
+	width: 25px;
+}
+
+table, tr, td, th {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.footer {
+	clear: both;
+}
+
+.total {
+	border-top: 1px solid #000000;
+}
+
+.notenrolled, .nograde, .pass, .partial, .summary, .achieved {
+	text-align: center;
+	width: 20px;
+}
+
+.left, .right, .centre {
+	font-size: 90%;
+}
+
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+	padding-right: 0.3em;
+}
+
+.centre {
+	text-align: center;
+}
+
+.small {
+	font-size: 80%;
+}
+
+.divider {
+	background-color: black;
+	width: 1px;
+}
+
+.notenrolled {
+	background-color: white;
+}
+
+.nograde {
+	background-color: #ffc7ce;
+	border: 1px solid #aaaaaa;
+}
+
+.pass {
+	color: black;
+	background-color: #c6efce;
+	border: 1px solid #000000;
+}
+
+.achieved {
+	color: black;
+	font-size: 0.6em;
+	background-color: #c6efce;
+	border: 1px solid #aaaaaa;
+}
+
+.partial {
+	color: gray;
+	font-size: 0.6em;
+	background-color: #fffacd;
+	border: 1px solid #aaaaaa;
+}
+
+.summary {
+	color: gray;
+	font-size: 0.6em;
+}
+
+.label {
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.printonly {
+	display: none;
+}
+
+a {
+	color: #3F0079;
+	font-size: 0.85em;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
