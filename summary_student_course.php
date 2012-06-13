@@ -102,13 +102,13 @@ function get_description($prefix, $course, $outcome) {
 </head>
 <body>
 <?php
-$criteria = get_possible_criteria($CFG->prefix, $_GET['course']);
+$criteria = get_possible_criteria($_GET['course']);
 $assignments = $DB->get_records_select('assignment', 'course='.$_GET['course']);
-$possible = get_possible($CFG->prefix, $_GET['course'], $_GET['student']);
-$achieved = get_achieved($CFG->prefix, $_GET['course'], $_GET['student']);
+$possible = get_possible($_GET['course'], $_GET['student']);
+$achieved = get_achieved($_GET['course'], $_GET['student']);
 $count = 0;
 foreach($assignments as $key=>$val) {
-	$sql = 'SELECT visible from '.$CFG->prefix.'course_modules where course='.$course->id.' AND instance='.$key.';';
+	$sql = 'SELECT visible from course_modules where course='.$course->id.' AND instance='.$key.';';
 	//echo '<p>'.$sql.'</p>';
 	$result = mysql_query($sql);
 	$row = mysql_fetch_object($result);
@@ -151,7 +151,7 @@ foreach ($criteria as $letter=>$detail) {
 			if ($possible[$letter.$n][$key]) {
 				$class = 'partial nobox';
 				$content = $letter.$n;
-				$d = get_description($CFG->prefix, $_GET['course'], $letter.$n);
+				$d = get_description($_GET['course'], $letter.$n);
 				if ($d) $desc = ' title="'.$d.'"';
 			}
 			if ($achieved[$letter.$n][$key]) $class = 'achieved';
