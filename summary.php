@@ -310,8 +310,9 @@ if (has_capability('mod/assignment:grade', $context)) {
 		echo '<table><tr><td colspan="2"><h3>'.get_string('courses', 'block_progress').'</h3></td></tr>';
 		foreach ($all_courses as $key=>$val) {
 			$courseid = $val['course']->id;
-			$context = $val['course']->context;
-			//$teachers = get_role_users($teacher_role, $context, true);
+			//$context = $val['course']->context;
+			$context = get_context_instance(CONTEXT_COURSE,$courseid);
+                        //$teachers = get_role_users($teacher_role, $context, true);
 			$teach = array();
 			foreach ($teachers as $t) {
 				$name = strtoupper($t->lastname).' '.ucfirst(strtolower($t->firstname));
