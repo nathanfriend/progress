@@ -14,9 +14,9 @@ e.g.
 
 <?php
 
-                $host = 'x.x.x.x'; // MYSQL database host adress
+                $host = 'x.x.x.x'; // MYSQL database host address
                 $db = 'DB Name'; // MYSQL database name
-                $user = 'DB User'; // Mysql Datbase user
-                $pass = 'DB Password'; // Mysql Datbase password
+                $user = 'DB User'; // MYSQL Datbase user
+                $pass = 'DB Password'; // MYSQL Database password
 ?>
 
