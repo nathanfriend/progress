@@ -1,0 +1,22 @@
+Student Progress block
+
+Original code by Mark J Tyers mark@zannet.co.uk
+
+Changes to make compatible with Moodle 2 by Nathan Friend n.friend@cant-col.ac.uk 19/06/2012
+
+So far tracking grid works.
+
+Extract zip to /{your-moodle-root}/blocks/progress
+
+You will need to add a file with your database connection details in /protected/dbcred.php
+
+e.g.
+
+<?php
+
+                $host = 'x.x.x.x'; // MYSQL database host adress
+                $db = 'DB Name'; // MYSQL database name
+                $user = 'DB User'; // Mysql Datbase user
+                $pass = 'DB Password'; // Mysql Datbase password
+?>
+
