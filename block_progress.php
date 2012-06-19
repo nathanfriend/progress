@@ -30,71 +30,49 @@
  */
  
 class block_progress extends block_base {
-public function init() {
+ function init() {
         $this->title = get_string('progress', 'block_progress');
         }
 function instance_allow_config() {
     return true;
 }
 
-public function get_content() {
+
+
+
+
+
+
+
+function get_content() {
+    	global $CFG, $USER, $SITE, $COURSE;
 	if ($this->content !== NULL) {
 		return $this->content;
 	}
+        
+        
 	$this->content = new stdClass;
 	global $USER, $CFG, $COURSE;
-        //Test link code
-            $this->content->text   = '<center><a href="/vle/blocks/group_targets/group_select.php"><img src="/vle/blocks/group_targets/group-target.png"</a></center>';
-            
             include_once('course_teacher.php');
+           
+            
 			$content = new courseteacher($CFG, $USER, $this->config);
 			$this->title = $content->get_title();
 			$this->content->text = $content->get_body();
 			$this->content->footer = $content->get_footer();
-            
+                        
+        // get the proper context 
+        $context2 = get_context_instance(CONTEXT_COURSE, $COURSE->id);
+                        
+        //only display the block if the users is a teacher - ie can update the course
+        if (has_capability('moodle/course:update', $context2)) { $this->content->text = $content->display_tutor_link(); } else { $this->content->text = $content->display_student_link();}
             
              return $this->content;
-        
-        
-        
-        
-	if (strpos($CFG->pagepath, 'course')) {
-		$context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
-		if (has_capability('mod/assignment:grade', $context)) {
-			// they are a teacher
-			include_once('course_teacher.php');
-			$content = new courseteacher($CFG, $USER, $this->config);
-			$this->title = $content->get_title();
-			$this->content->text = $content->get_body();
-			$this->content->footer = $content->get_footer();
-			//$this->content->footer = 'test';
-		} else {
-			// they are a student
-			if ($this->config->mode == 'tutor') {
-				include_once('frontpage_student.php');
-				$content = new frontpagestudent($CFG, $USER, $this->config);
-				$this->title = $content->get_title();
-				$this->content->text = $content->get_body();
-				$this->content->footer = $content->get_footer();
-			} else {
-				include_once('course_student.php');
-				$content = new coursestudent($CFG, $USER, $this->config);
-				$this->title = $content->get_title();
-				$this->content->text = $content->get_body();
-				$this->content->footer = $content->get_footer();
-			}
-		}
-	} else {
-		include_once('frontpage_student.php');
-		$content = new frontpagestudent($CFG, $USER, $this->config);
-		$this->title = $content->get_title();
-		$this->content->text = $content->get_body();
-		$this->content->footer = $content->get_footer();
-	}
 
-        
-	return $this->content;
 }
 
 }
 ?>
+
+
+

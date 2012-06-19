@@ -58,6 +58,9 @@ function outcome_achieved($prefix, $course, $student, $outcome) {
 			AND a.finalgrade >1
 			AND c.shortname = "'.$outcome.'"
 			AND b.courseid = '.$course.';';
+        include '/protected/dbcred.php'; 
+        mysql_connect($host, $user, $pass);
+        mysql_select_db($db);
 	$result = mysql_query($sql);
 	if (mysql_num_rows($result)) return true;
 	return false;
@@ -69,7 +72,7 @@ function quiz_outcome_achieved($prefix, $course, $student, $outcome) {
         global $DB;
 	$quizzes = $DB->get_records_select('quiz', 'course='.$course, array('id'));
 	foreach($quizzes as $q) {
-		$threshold = $DB->get_field_select('quiz_feedback', 'mingrade', array('feedbacktext="PASS"'));
+		$threshold = $DB->get_field_select('quiz_feedback', 'mingrade', 'feedbacktext="PASS"');
 		$grade = $DB->get_field_select('quiz_grades', 'grade', array('quiz='.$q->id.' userid='.$student));
 		if ($grade >= $threshold) { // they have passed the quiz!
 			// which criteria have they passed?
@@ -78,6 +81,9 @@ function quiz_outcome_achieved($prefix, $course, $student, $outcome) {
 					and a.courseid = '.$course.' 
 					and a.itemmodule = "quiz"
 					and b.shortname = "'.$outcome.'";';
+                include '/protected/dbcred.php'; 
+                mysql_connect($host, $user, $pass);
+                mysql_select_db($db);
 			$result = mysql_query($sql);
 			$row = mysql_fetch_assoc($result);
 			if ($row['id']) return true;
@@ -118,6 +124,9 @@ function get_students($courseid, $prefix, $group=null) {
 <?php
 function get_description($prefix, $course, $outcome) {
 	$sql = 'SELECT description from '.$prefix.'grade_outcomes WHERE courseid='.$course.' and shortname="'.$outcome.'";';
+        include '/protected/dbcred.php'; 
+        mysql_connect($host, $user, $pass);
+        mysql_select_db($db);
 	$result = mysql_query($sql);
 	$row = mysql_fetch_assoc($result);
 	$desc = str_replace('<p>', "\n", $row['description']);

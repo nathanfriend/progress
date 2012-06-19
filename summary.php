@@ -303,26 +303,40 @@ if (has_capability('mod/assignment:grade', $context)) {
 		
 		echo '</table></div></div>';
 
-		# DISPLAY KEY
-		$teacher_role=$DB->get_field('role','id',array('shortname'=>'editingteacher'));
-		echo '<div class="page">';
-		echo "\n".'<div id="key"><h2 class="newpage">'.get_string('key', 'block_progress').'</h2>';
-		echo '<table><tr><td colspan="2"><h3>'.get_string('courses', 'block_progress').'</h3></td></tr>';
-		foreach ($all_courses as $key=>$val) {
-			$courseid = $val['course']->id;
-			//$context = $val['course']->context;
-			$context = get_context_instance(CONTEXT_COURSE,$courseid);
-                        //$teachers = get_role_users($teacher_role, $context, true);
-			$teach = array();
-			foreach ($teachers as $t) {
-				$name = strtoupper($t->lastname).' '.ucfirst(strtolower($t->firstname));
-				array_push($teach, $name);
-			}
-			$teach_list = implode(', ', $teach);
-			$course_label = str_replace(strtoupper($prefix), '', strtoupper($val['course']->shortname));
-			echo '<tr><th class="course">'.$course_label.'</th><td class="label">'.$val['course']->fullname.'</td></tr>';
-			echo '<tr><td class="small">&nbsp;</th><td class="small">'.$teach_list.'</th></tr>';
-		}
+		 # DISPLAY KEY
+                $teacher_role=$DB->get_field('role','id',array('shortname'=>'editingteacher'));
+                echo '<div class="page">';
+                echo "\n".'<div id="key"><h2 class="newpage">'.get_string('key', 'block_progress').'</h2>';
+                echo '<table><tr><td colspan="2"><h3>'.get_string('courses', 'block_progress').'</h3></td></tr>';
+                foreach ($all_courses as $key=>$val) {
+                        $courseid = $val['course']->id;
+                        $context = $val['course']->context;
+                       // $teachers = get_role_users($teacher_role, $context, true);
+                        $teach = array();
+                        foreach ($teachers as $t) {
+                                $name = strtoupper($t->lastname).' '.ucfirst(strtolower($t->firstname));
+                                array_push($teach, $name);
+                        }
+                        $teach_list = implode(', ', $teach);
+                        $course_label = str_replace(strtoupper($prefix), '', strtoupper($val['course']->shortname));
+                        echo '<tr><th class="course">'.$course_label.'</th><td class="label">'.$val['course']->fullname.'</td></tr>';
+                        echo '<tr><td class="small">&nbsp;</th><td class="small">'.$teach_list.'</th></tr>';
+                        
+                        
+                   //     foreach ($all_courses as $key=>$val) {
+                   //     $courseid = $val['course']->id;
+                   //     $context = $val['course']->context;
+                        //echo "Course ID: ".$courseid."<br>";
+                        //echo "Context: ".$context."<br><br>";
+                  //      print_r ($val);
+                   //     }
+                        
+                        
+                        
+                        
+                        
+                }
+
 		?>
 		<tr class="noprint"><td colspan="2"><h3><?php print_string('colours', 'block_progress'); ?></h3></td></tr>
 		<tr class="noprint"><th class="nograde"></th><td class="label"><?php print_string('notachieved', 'block_progress'); ?></td></tr>

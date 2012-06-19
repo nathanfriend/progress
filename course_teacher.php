@@ -135,6 +135,25 @@ function display_tutor_link() {
 	return $message;
 }
 
+function display_student_link() {
+	global $COURSE;
+	if (isset($this->conf->prefix)) $prefix = $this->conf->prefix;
+//	$url = $this->cfg->httpswwwroot.'/blocks/progress/summary_student.php?course=&prefix='.$prefix.'&user='.$this->user->id.'&home=true';
+	$url = $this->cfg->httpswwwroot.'/blocks/progress/summary_student.php?student='.$this->user->id.'&user='.$this->user->id;        
+        
+        
+	if ($this->conf->debug=='yes') $url .= '&debug=true';
+	if (isset($this->conf->group) && $this->conf->group > 0) $group = $this->conf->group;
+	if (isset($_GET['group'])) $group = $_GET['group'];
+	if (isset($_GET['group']) && $_GET['group'] == 'all') unset($group);
+	if (isset($group)) $url .= '&group='.$group;
+	$name = 'features';
+	$features = 'width=800, height=600, scrollbars=yes, resizable=yes';
+	$message = '<a href="javascript:void(0)" onclick="window.open(\''.$url.'\', \''.$name.'\', \''.$features.'\')">'.get_string('showtracking', 'block_progress').'</a>';
+	return $message;
+}
+
+
 # ------------------------ RETRIEVES THE BLOCK FOOTER ------------------------
 function get_footer() {
 	global $COURSE;
