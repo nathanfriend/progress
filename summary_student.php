@@ -10,31 +10,18 @@ $now = time();
 // require valid moodle login.  Will redirect to login page if not logged in.
 require_login();
 
-//Gets role id in course context.
-//$context = get_context_instance(CONTEXT_COURSE,$SESSION->cal_course_referer);
-//if ($roles = get_user_roles($context, $USER->id)) {
-//foreach ($roles as $role) {
-//echo 'ID: '.$role->roleid.'<br />';
-//echo 'Name'.$role->name.'<br />';
-//}
-//}
-
 //Checks session userid matches url id.
-function CheckRole() {
-                     global $USER;
-                     if ($_GET['student']==$USER->id) { 
-                                                      } else exit("Authentication missmatch, access denied.");
-                     }
+//function CheckRole() {
+//                     global $USER;
+//                     if ($_GET['student']==$USER->id) { } else exit("Authentication missmatch, access denied.");
+//                     }
+                    
+                     
+// get the context 
+//$context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
 
-//If user is a student call CheckRole function.
-if ($role->roleid==5) {
-                      CheckRole();
-                      } 
-
-$r = $DB->get_record('role_assignments', array('userid'=>$USER->id));
-//echo 'role 2:' . $r->roleid;
-//if ($r->roleid==5) { CheckRole(); }
-if ($role->roleid==5) {CheckRole(); }
+// If user does not have editing rights call the check role function.
+//if (has_capability('moodle/course:update', $context)) {  } else CheckRole(); 
 
 ?>
 <?php
@@ -54,7 +41,7 @@ function get_possible($prefix, $course) {
 				where a.id = b.outcomeid
 				and b.courseid='.$course.
 				' and a.shortname like "'.$letter.'%";';
-        include '/protected/dbcred.php'; 
+        include '/moodledata/progress/dbcred.php'; 
         mysql_connect($host, $user, $pass);
         mysql_select_db($db);
 		$result = mysql_query($sql);
@@ -93,8 +80,9 @@ function get_achieved($prefix, $student, $course) {
 ?>
 <?php
 function outcome_achieved($prefix, $course, $student, $outcome) {
-	$quiz = quiz_outcome_achieved($prefix, $course, $student, $outcome);
-	if ($quiz) return true;
+	//$quiz = quiz_outcome_achieved($prefix, $course, $student, $outcome);
+if (isset($quiz))
+    if ($quiz) return true;
 	$sql = 'SELECT b.itemname
 			FROM '.$prefix.'grade_grades a, '.$prefix.'grade_items b, '.$prefix.'grade_outcomes c
 			WHERE a.itemid = b.id
@@ -114,9 +102,10 @@ function quiz_outcome_achieved($prefix, $course, $student, $outcome) {
         global $DB;
 	$quizzes = $DB->get_records_select('quiz', 'course='.$course, array('id'));
 	foreach($quizzes as $q) {
-		$threshold = $DB->get_field_select('quiz_feedback', 'mingrade', 'feedbacktext="PASS"');
+		//$threshold = $DB->get_field_select('quiz_feedback', 'mingrade', 'feedbacktext="PASS"');
 		$grade = $DB->get_field_select('quiz_grades', 'grade', 'quiz='.$q->id.' and userid='.$student);
-		if ($grade >= $threshold) { // they have passed the quiz!
+		if (isset($threshold))
+                if ($grade >= $threshold) { // they have passed the quiz!
 			// which criteria have they passed?
 			$sql = 'select count(b.id) as id from mdl_grade_items a, mdl_grade_outcomes b 
 					where a.outcomeid = b.id 
@@ -291,7 +280,7 @@ foreach ($all_courses as $course) {
 		$desc = get_description($CFG->prefix, $course['course']->id, 'D'.$c);
 		if ($desc) $title = ' title="'.$desc.'"';
 		if (outcome_achieved($CFG->prefix, $course['course']->id, $student->id, 'D'.$c)) $class = 'achieved';
-		if (quiz_outcome_achieved($CFG->prefix, $course['course']->id, $student->id, 'D'.$c)) $class = 'achieved';
+//		if (quiz_outcome_achieved($CFG->prefix, $course['course']->id, $student->id, 'D'.$c)) $class = 'achieved';
 		//echo "\n".'<td class="'.$class.'">'.$c.'</td>';
 		echo "\n".'<td'.$title.' class="'.$class.'">'.$c.'</td>';
 	}

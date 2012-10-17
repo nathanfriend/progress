@@ -132,7 +132,7 @@ function display_tutor_link() {
 	$name = 'features';
 	$features = 'width=800, height=600, scrollbars=yes, resizable=yes';
 	$message = '<a href="javascript:void(0)" onclick="window.open(\''.$url.'\', \''.$name.'\', \''.$features.'\')">'.get_string('showtracking', 'block_progress').'</a>';
-	return $message;
+        return $message;
 }
 
 function display_student_link() {
@@ -140,7 +140,7 @@ function display_student_link() {
 	if (isset($this->conf->prefix)) $prefix = $this->conf->prefix;
 //	$url = $this->cfg->httpswwwroot.'/blocks/progress/summary_student.php?course=&prefix='.$prefix.'&user='.$this->user->id.'&home=true';
 	$url = $this->cfg->httpswwwroot.'/blocks/progress/summary_student.php?student='.$this->user->id.'&user='.$this->user->id;        
-        
+ 
         
 	if ($this->conf->debug=='yes') $url .= '&debug=true';
 	if (isset($this->conf->group) && $this->conf->group > 0) $group = $this->conf->group;
@@ -238,7 +238,7 @@ function get_grades($id) { # retrieves the available p, m and d outcomes
 				and b.courseid='.$id.
 				' and a.shortname like "'.$letter.'%";';
 				//echo '<p>'.$sql.'</p>';
-        include '/protected/dbcred.php'; 
+        include '/moodledata/progress/dbcred.php'; 
         mysql_connect($host, $user, $pass);
         mysql_select_db($db);
 			$result = mysql_query($sql);

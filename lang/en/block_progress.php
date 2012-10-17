@@ -1,6 +1,6 @@
 <?php
 $string['pluginname']   = 'Student Progress';
-$string['progress'] = 'block_progress';
+$string['progress'] = 'Student Progress';
 $string['blocktitletext'] = 'Block title';
 $string['leaveblanktodefault'] = 'leaving blank defaults to <em>Student Progress</em>';
 $string['nocriteriatext'] = 'colour for 0&#37; achieved';

@@ -38,7 +38,14 @@ function instance_allow_config() {
 }
 
 
-
+public function specialization() {
+  if (!empty($this->config->title)) {
+    $this->title = $this->config->title;
+  } else {
+    $this->title = get_string('pluginname', 'block_progress');
+  }
+ 
+}
 
 
 

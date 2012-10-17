@@ -21,7 +21,10 @@ function generate_group_links($courseid, $page) {
 		}
 		}
 	}
+        if (isset($gr)) {
 	return implode(' | ', $gr);
+        }
+        
 }
 ?>
 <?php
@@ -33,7 +36,7 @@ function get_possible_criteria($prefix, $course) {
 				where a.id = b.outcomeid
 				and b.courseid='.$course.
 				' and a.shortname like "'.$letter.'%";';
-        include '/protected/dbcred.php'; 
+        include '/moodledata/progress/dbcred.php'; 
         mysql_connect($host, $user, $pass);
         mysql_select_db($db);
 		$result = mysql_query($sql);
@@ -48,8 +51,9 @@ function get_possible_criteria($prefix, $course) {
 ?>
 <?php
 function outcome_achieved($prefix, $course, $student, $outcome) {
-	$quiz = quiz_outcome_achieved($prefix, $course, $student, $outcome);
-	if ($quiz) return true;
+	//$quiz = quiz_outcome_achieved($prefix, $course, $student, $outcome);
+	if (isset ($quiz)) 
+        if ($quiz) return true;
 	$sql = 'SELECT b.itemname
 			FROM '.$prefix.'grade_grades a, '.$prefix.'grade_items b, '.$prefix.'grade_outcomes c
 			WHERE a.itemid = b.id
@@ -58,12 +62,12 @@ function outcome_achieved($prefix, $course, $student, $outcome) {
 			AND a.finalgrade >1
 			AND c.shortname = "'.$outcome.'"
 			AND b.courseid = '.$course.';';
-        include '/protected/dbcred.php'; 
+        include '/moodledata/progress/dbcred.php'; 
         mysql_connect($host, $user, $pass);
         mysql_select_db($db);
 	$result = mysql_query($sql);
 	if (mysql_num_rows($result)) return true;
-	return false;
+	
 }
 ?>
 <?php
@@ -72,7 +76,7 @@ function quiz_outcome_achieved($prefix, $course, $student, $outcome) {
         global $DB;
 	$quizzes = $DB->get_records_select('quiz', 'course='.$course, array('id'));
 	foreach($quizzes as $q) {
-		$threshold = $DB->get_field_select('quiz_feedback', 'mingrade', 'feedbacktext="PASS"');
+		//$threshold = $DB->get_field_select('quiz_feedback', 'id', 'feedbacktext="PASS"');
 		$grade = $DB->get_field_select('quiz_grades', 'grade', array('quiz='.$q->id.' userid='.$student));
 		if ($grade >= $threshold) { // they have passed the quiz!
 			// which criteria have they passed?
@@ -81,7 +85,7 @@ function quiz_outcome_achieved($prefix, $course, $student, $outcome) {
 					and a.courseid = '.$course.' 
 					and a.itemmodule = "quiz"
 					and b.shortname = "'.$outcome.'";';
-                include '/protected/dbcred.php'; 
+                include '/moodledata/progress/dbcred.php'; 
                 mysql_connect($host, $user, $pass);
                 mysql_select_db($db);
 			$result = mysql_query($sql);
@@ -124,7 +128,7 @@ function get_students($courseid, $prefix, $group=null) {
 <?php
 function get_description($prefix, $course, $outcome) {
 	$sql = 'SELECT description from '.$prefix.'grade_outcomes WHERE courseid='.$course.' and shortname="'.$outcome.'";';
-        include '/protected/dbcred.php'; 
+        include '/moodledata/progress/dbcred.php'; 
         mysql_connect($host, $user, $pass);
         mysql_select_db($db);
 	$result = mysql_query($sql);

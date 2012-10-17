@@ -111,7 +111,7 @@ function get_grades($id) {
 				where a.id = b.outcomeid
 				and b.courseid='.$id.
 				' and a.shortname like "'.$letter.'%";';
-        include '/protected/dbcred.php'; 
+        include '/moodledata/progress/dbcred.php'; 
         mysql_connect($host, $user, $pass);
         mysql_select_db($db);                
 			$result = mysql_query($sql);

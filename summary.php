@@ -24,7 +24,12 @@ function generate_group_links($courseid) {
 			}
 		}
 	}
+        
+        if (isset($gr)) 
+        {
 	return implode(' | ', $gr);
+        }
+        
 }
 ?>
 <?php
@@ -61,7 +66,7 @@ function get_grades($p, $c) {
 				where a.id = b.outcomeid
 				and b.courseid='.$c.
 				' and a.shortname like "'.$letter.'%";';
-        include '/protected/dbcred.php'; 
+        include '/moodledata/progress/dbcred.php'; 
         mysql_connect($host, $user, $pass);
         mysql_select_db($db);
 		$result = mysql_query($sql);
@@ -310,13 +315,13 @@ if (has_capability('mod/assignment:grade', $context)) {
                 echo '<table><tr><td colspan="2"><h3>'.get_string('courses', 'block_progress').'</h3></td></tr>';
                 foreach ($all_courses as $key=>$val) {
                         $courseid = $val['course']->id;
-                        $context = $val['course']->context;
+     //                   $context = $val['course']->context;
                        // $teachers = get_role_users($teacher_role, $context, true);
                         $teach = array();
-                        foreach ($teachers as $t) {
-                                $name = strtoupper($t->lastname).' '.ucfirst(strtolower($t->firstname));
-                                array_push($teach, $name);
-                        }
+  //                      foreach ($teachers as $t) {
+  //                              $name = strtoupper($t->lastname).' '.ucfirst(strtolower($t->firstname));
+   //                             array_push($teach, $name);
+     //                   }
                         $teach_list = implode(', ', $teach);
                         $course_label = str_replace(strtoupper($prefix), '', strtoupper($val['course']->shortname));
                         echo '<tr><th class="course">'.$course_label.'</th><td class="label">'.$val['course']->fullname.'</td></tr>';
