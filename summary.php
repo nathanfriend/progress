@@ -175,7 +175,7 @@ function uses_outcomes($prefix, $courseid) {
 	?>
 </head>
 <body>
-<img src="cc-logo.jpg" align="right"/>
+<img src="logo.jpg" align="right"/>
 <div class="page">
 <?php
 $courseid = $_GET['course'];
