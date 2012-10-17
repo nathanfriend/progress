@@ -238,7 +238,7 @@ function get_grades($id) { # retrieves the available p, m and d outcomes
 				and b.courseid='.$id.
 				' and a.shortname like "'.$letter.'%";';
 				//echo '<p>'.$sql.'</p>';
-        include '/moodledata/progress/dbcred.php'; 
+        include '/protected/dbcred.php'; 
         mysql_connect($host, $user, $pass);
         mysql_select_db($db);
 			$result = mysql_query($sql);

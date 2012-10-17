@@ -36,7 +36,7 @@ function get_possible_criteria($prefix, $course) {
 				where a.id = b.outcomeid
 				and b.courseid='.$course.
 				' and a.shortname like "'.$letter.'%";';
-        include '/moodledata/progress/dbcred.php'; 
+        include '/protected/dbcred.php'; 
         mysql_connect($host, $user, $pass);
         mysql_select_db($db);
 		$result = mysql_query($sql);
@@ -62,7 +62,7 @@ function outcome_achieved($prefix, $course, $student, $outcome) {
 			AND a.finalgrade >1
 			AND c.shortname = "'.$outcome.'"
 			AND b.courseid = '.$course.';';
-        include '/moodledata/progress/dbcred.php'; 
+        include '/protected/dbcred.php'; 
         mysql_connect($host, $user, $pass);
         mysql_select_db($db);
 	$result = mysql_query($sql);
@@ -85,7 +85,7 @@ function quiz_outcome_achieved($prefix, $course, $student, $outcome) {
 					and a.courseid = '.$course.' 
 					and a.itemmodule = "quiz"
 					and b.shortname = "'.$outcome.'";';
-                include '/moodledata/progress/dbcred.php'; 
+                include '/protected/dbcred.php'; 
                 mysql_connect($host, $user, $pass);
                 mysql_select_db($db);
 			$result = mysql_query($sql);
@@ -128,7 +128,7 @@ function get_students($courseid, $prefix, $group=null) {
 <?php
 function get_description($prefix, $course, $outcome) {
 	$sql = 'SELECT description from '.$prefix.'grade_outcomes WHERE courseid='.$course.' and shortname="'.$outcome.'";';
-        include '/moodledata/progress/dbcred.php'; 
+        include '/protected/dbcred.php'; 
         mysql_connect($host, $user, $pass);
         mysql_select_db($db);
 	$result = mysql_query($sql);
